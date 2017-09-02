@@ -1,0 +1,56 @@
+TYPE Boolean
+A boolean value - true/false.
+
+TYPE String
+A string of UTF8 characters.
+
+TYPE UUID
+A UUID/GUID, a 16-byte value often displayed as 32 hexadecimal digits in the
+format 00000000-0000-0000-0000-000000000000.
+
+TYPE List<value>
+A list of values.
+
+TYPE Map<key,value>
+A map of key to value.
+
+MESSAGE Message
+A message.
+
+MESSAGE Request : Message
+A request message (client -> server).
+
+MESSAGE Response : Message
+A response message (server -> client).
+
+MESSAGE ErrorResponse : Response
+An error response. This may be returned as an alternative response to any
+action, normally with an error indication in the underlyin protocol (e.g. a 4xx
+or 5xx HTTP status code).
+    error   : String
+    message ? String
+    details ? Map<String,String>
+
+MESSAGE AuthenticatedRequest : Request
+A request including an authentication token.
+    token : UUID
+
+MESSAGE SuccessResponse : Response
+A geneic boolean success/failure response.
+    success : Boolean
+
+MESSAGE LoginRequest : Request
+A login request, including username/password credentials.
+    username : String
+    password : String
+
+MESSAGE LoginResponse : Response
+A successful login response including the authentication token to use in future
+authenticated requests.
+    token : UUID
+
+ACTION Login LoginRequest LoginResponse
+The login action.
+
+ACTION Logout AuthenticatedRequest SuccessResponse
+The logout action.
