@@ -25,29 +25,37 @@ A response message (server -> client).
 
 MESSAGE ErrorResponse : Response
 An error response. This may be returned as an alternative response to any
-action, normally with an error indication in the underlyin protocol (e.g. a 4xx
-or 5xx HTTP status code).
+action, normally with an error indication in the underlying protocol (e.g. a
+4xx or 5xx HTTP status code).
     error   : String
+A code giving the type of error which occurred.
     message ? String
+A more detailed, human-readable error message.
     details ? Map<String,String>
+Additional details of the error.
 
 MESSAGE AuthenticatedRequest : Request
 A request including an authentication token.
     token : UUID
+A token authenticating the user.
 
 MESSAGE SuccessResponse : Response
 A geneic boolean success/failure response.
     success : Boolean
+True if the operation succeeded, false otherwise.
 
 MESSAGE LoginRequest : Request
 A login request, including username/password credentials.
     username : String
+The username to log in with.
     password : String
+The user's password.
 
 MESSAGE LoginResponse : Response
 A successful login response including the authentication token to use in future
 authenticated requests.
     token : UUID
+An authentication token to use in future requests.
 
 ACTION Login LoginRequest LoginResponse
 The login action.

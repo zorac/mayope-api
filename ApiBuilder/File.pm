@@ -77,8 +77,12 @@ sub indentln {
 sub comment {
     my ($self, $count, $prefix, $text) = @_;
     my $indent = ($self->{indent} x $count) . $prefix;
+    my $len = 80 - length($indent);
 
-    $self->{file}->print($indent, $text, "\n"); # TODO wrod-wrap?
+    while ($text && ($text =~ /^(.{1,$len})(?:\s(.*))?$/)) {
+        $self->{file}->print($indent, $1, "\n");
+        $text = $2;
+    }
 }
 
 1;

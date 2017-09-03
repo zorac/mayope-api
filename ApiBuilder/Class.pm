@@ -8,7 +8,7 @@ sub new {
     my ($this, $basedir, $type) = @_;
     my $self = $this->SUPER::new($basedir, $type->id);
 
-    $self->{parent} = $type->parent;
+    $self->{type} = $type;
     $self->{package} = undef;
     $self->{package_separator} = '.';
     $self->{includes} = { };
@@ -52,8 +52,7 @@ sub add_field {
 
 sub build_file {
     my ($self) = @_;
-    my $class = $self->{id};
-    my $parent = $self->{parent};
+    my $type = $self->{type};
     my $package = $self->{package};
     my %includes = %{$self->{includes}};
     my @include_groups = @{$self->{include_groups}}, qr/./;
@@ -78,7 +77,7 @@ sub build_file {
     }
 
     $self->begin_package($package) if ($includes_before_package);
-    $self->begin_class($class, $parent);
+    $self->begin_class($type);
 
     foreach my $field (@fields) {
         $self->do_field($field, $index++);
@@ -107,7 +106,7 @@ sub do_include {
 }
 
 sub begin_class {
-    my ($self, $class, $parent) = @_;
+    my ($self, $type) = @_;
     # Implement in subclass
 }
 

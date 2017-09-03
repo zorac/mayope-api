@@ -31,9 +31,17 @@ sub begin_package {
 }
 
 sub begin_class {
-    my ($self, $class, $parent) = @_;
+    my ($self, $type) = @_;
+    my $comment = $type->comment;
+    my $parent = $type->parent;
 
-    $self->indent(1, 'public class ', $class);
+    if ($comment) {
+        $self->indentln(1, '/// <summary>');
+        $self->comment(1, '/// ', $comment);
+        $self->indentln(1, '/// </summary>');
+    }
+
+    $self->indent(1, 'public class ', $type->id);
     $self->print(' : ', $parent->id) if ($parent); # TODO class
     $self->println;
     $self->indentln(1, '{');
@@ -43,8 +51,16 @@ sub do_field {
     my ($self, $field, $index) = @_;
     my $class = $field->class('CSharp');
     my $name = ucfirst($field->id);
+    my $comment = $field->comment;
 
     $self->println if ($index);
+
+    if ($comment) {
+        $self->indentln(2, '/// <summary>');
+        $self->comment(2, '/// ', $comment);
+        $self->indentln(2, '/// </summary>');
+    }
+
     $self->indentln(2, '[Required]') if ($field->required);
     $self->indentln(2, 'public ', $class, ' ', $name, ' { get; set; }');
 }

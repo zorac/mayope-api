@@ -154,6 +154,7 @@ sub parse_type {
             }
 
             $param->{optional} = 1 if ($optional eq '?');
+            $self->parse_comment($param);
             $params->{$id} = $param;
         } elsif ($line =~ /^\s*$/) {
             last;

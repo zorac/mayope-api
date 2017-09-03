@@ -20,4 +20,10 @@ sub params {
     return $self->{params} ? values($self->{params}) : ();
 }
 
+sub comment {
+    my ($self) = @_;
+
+    return $self->{comment};
+}
+
 1;

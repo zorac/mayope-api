@@ -32,6 +32,12 @@ sub required {
     return $self->{optional} ? 0 : 1;
 }
 
+sub comment {
+    my ($self) = @_;
+
+    return $self->{comment};
+}
+
 sub class {
     my ($self, $lang) = @_;
     my $class = $self->type->class($lang);
