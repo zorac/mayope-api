@@ -65,6 +65,31 @@ sub do_field {
     $self->indentln(2, 'public ', $class, ' ', $name, ' { get; set; }');
 }
 
+sub do_method {
+    my ($self, $method, $index) = @_;
+    my $name = $method->id;
+    my $returns = $method->returns->class('CSharp');
+    my $comment = $method->comment;
+    my $pindex = 0;
+
+    $self->println if ($index);
+
+    if ($comment) {
+        $self->indentln(2, '/// <summary>');
+        $self->comment(2, '/// ', $comment);
+        $self->indentln(2, '/// <summary>');
+    }
+
+    $self->indent(2, 'public ', $returns, ' ', $name, '(');
+
+    foreach my $param ($method->params) {
+        $self->print(', ') if ($pindex++);
+        $self->print($param->class('Java'), ' ', $param->id);
+    }
+
+    $self->println(');');
+}
+
 sub end_class {
     my ($self) = @_;
 

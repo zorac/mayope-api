@@ -41,15 +41,11 @@ sub parse {
                 $/x) {
             my $id = $1;
             my $generic = $2;
-            my $type = Mayope::Make::Model::Type->new(
-                id => $id
-            );
+            my $type = Mayope::Make::Model::Type->new( id => $id );
 
             $type->{generic} = [ split(/\s*,\s*/, $generic) ] if ($generic);
-
-            $self->parse_type($type);
-
             $self->{type}{$id} = $type;
+            $self->parse_type($type);
         } elsif ($line =~ /^
                     MESSAGE \s+ (\w+) (?:
                         \s* : \s* (\w+)
@@ -57,14 +53,11 @@ sub parse {
                 $/x) {
             my $id = $1;
             my $parent = $2 ? $self->{message}{$2} : undef;
-            my $message = Mayope::Make::Model::Message->new(
-                id => $id,
-                parent => $parent
-            );
+            my $message = Mayope::Make::Model::Message->new( id => $id );
 
-            $self->parse_type($message);
-
+            $message->{parent} = $parent if ($parent);
             $self->{message}{$id} = $message;
+            $self->parse_type($message);
         } elsif ($line =~ /^
                     ACTION \s+ (\w+) \s+ (\w+) \s+ (\w+) \s*
                 $/x) {
@@ -77,9 +70,8 @@ sub parse {
                 response => $response
             );
 
-            $self->parse_comment($action);
-
             $self->{action}{$id} = $action;
+            $self->parse_comment($action);
         } elsif ($line !~ /^\s*$/) {
             die("Unexpected line in parse()\n$line\n");
         }
@@ -131,7 +123,7 @@ sub parse_type {
             my $type = $self->{type}{$3};
             my $generic = $4;
 
-            die("Unknown type $type in\n$line\n") if (!$type);
+            die("Unknown type $3 in\n$line\n") if (!$type);
 
             my $param = Mayope::Make::Model::Param->new(
                 id => $id,

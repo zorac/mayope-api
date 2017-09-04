@@ -14,6 +14,32 @@ A list of values.
 TYPE Map<key,value>
 A map of key to value.
 
+TYPE Branch
+Details of a branch.
+    uuid        : UUID
+    id          : String
+    name        : String
+    description : String
+    type        : String
+    branches    ? List<Branch>
+
+TYPE Tree
+Details of a tree.
+    uuid        : UUID
+    id          : String
+    name        : String
+    description : String
+    branches    ? List<Branch>
+
+TYPE Forest
+Details of a forest.
+    uuid        : UUID
+    id          : String
+    name        : String
+    description : String
+    forests     ? List<Forest>
+    trees       ? List<Tree>
+
 MESSAGE Message
 A message.
 
@@ -57,8 +83,41 @@ authenticated requests.
     token : UUID
 An authentication token to use in future requests.
 
+MESSAGE ListForestsRequest : AuthenticatedRequest
+A request for a list of forests.
+    parent ? UUID
+
+MESSAGE ListForestsResponse
+A response containing a list of forests.
+    forests : List<Forest>
+
+MESSAGE ListTreesRequest : AuthenticatedRequest
+A request for a list of trees.
+    forest : UUID
+
+MESSAGE ListTreesResponse
+A response containing a list of trees.
+    trees : List<Tree>
+
+MESSAGE ListBranchesRequest : AuthenticatedRequest
+A request for a list of branches.
+    tree : UUID
+
+MESSAGE ListBranchesResponse
+A response containing a list of branches.
+    branches : List<Branch>
+
 ACTION Login LoginRequest LoginResponse
 The login action.
 
 ACTION Logout AuthenticatedRequest SuccessResponse
 The logout action.
+
+ACTION ListForests ListForestsRequest ListForestsResponse
+The forest list action.
+
+ACTION ListTrees ListTreesRequest ListTreesResponse
+The tree list action.
+
+ACTION ListBranches ListBranchesRequest ListBranchesResponse
+The branch list action.

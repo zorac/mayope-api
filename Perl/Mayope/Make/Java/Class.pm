@@ -97,6 +97,31 @@ sub do_field_methods {
     $self->indentln(1, '}');
 }
 
+sub do_method {
+    my ($self, $method, $index) = @_;
+    my $name = $method->id;
+    my $returns = $method->returns->class('Java');
+    my $comment = $method->comment;
+    my $pindex = 0;
+
+    $self->println if ($index);
+
+    if ($comment) {
+        $self->indentln(1, '/**');
+        $self->comment(1, ' * ', $comment);
+        $self->indentln(1, ' */');
+    }
+
+    $self->indent(1, 'public ', $returns, ' ', $name, '(');
+
+    foreach my $param ($method->params) {
+        $self->print(', ') if ($pindex++);
+        $self->print($param->class('Java'), ' ', $param->id);
+    }
+
+    $self->println(');');
+}
+
 sub end_class {
     my ($self) = @_;
 

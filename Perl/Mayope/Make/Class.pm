@@ -4,6 +4,10 @@ use strict;
 
 use base qw( Mayope::Make::File );
 
+use Mayope::Make::Model::Method;
+use Mayope::Make::Model::Param;
+use Mayope::Make::Model::Type;
+
 sub new {
     my ($this, $basedir, $type) = @_;
     my $self = $this->SUPER::new($basedir, $type->id);
@@ -16,6 +20,7 @@ sub new {
     $self->{includes_before_package} = 0;
     $self->{fields} = [ ];
     $self->{fields_have_methods} = 0;
+    $self->{methods} = [ ];
 
     return($self);
 }
@@ -38,8 +43,11 @@ sub subpackage {
 
 sub add_include {
     my ($self, @includes) = @_;
+    my $package = $self->{package} || '';
 
     foreach my $include (@includes) {
+        next if ($include eq $package); # TODO superpackages
+
         $self->{includes}{$include} = 1;
     }
 }
@@ -48,6 +56,12 @@ sub add_field {
     my ($self, @fields) = @_;
 
     push(@{$self->{fields}}, @fields);
+}
+
+sub add_method {
+    my ($self, @methods) = @_;
+
+    push(@{$self->{methods}}, @methods);
 }
 
 sub build_file {
@@ -59,6 +73,7 @@ sub build_file {
     my $includes_before_package = $self->{includes_before_package};
     my @fields = @{$self->{fields}};
     my $fields_have_methods = $self->{fields_have_methods};
+    my @methods = @{$self->{methods}};
     my $index = 0;
 
     $self->begin_package($package) if (!$includes_before_package);
@@ -84,11 +99,13 @@ sub build_file {
     }
 
     if ($fields_have_methods) {
-        $index = 0;
-
         foreach my $field (@fields) {
             $self->do_field_methods($field, $index++);
         }
+    }
+
+    foreach my $method (@methods) {
+        $self->do_method($method, $index++);
     }
 
     $self->end_class();
@@ -111,12 +128,17 @@ sub begin_class {
 }
 
 sub do_field {
-    my ($self, $field) = @_;
+    my ($self, $field, $index) = @_;
     # Implement in subclass
 }
 
 sub do_field_methods {
-    my ($self, $field) = @_;
+    my ($self, $field, $index) = @_;
+    # Implement in subclass
+}
+
+sub do_method {
+    my ($self, $method, $index) = @_;
     # Implement in subclass
 }
 

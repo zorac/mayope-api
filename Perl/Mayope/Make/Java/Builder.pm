@@ -24,8 +24,13 @@ sub build {
             $type->class('Java', $system->[0]);
             $type->package('Java', $system->[1]) if ($#{$system});
         } else {
+            my $class = Mayope::Make::Java::Class->new($basedir, $type);
+
+            $class->subpackage('types');
             $type->class('Java', $type->id);
-            # TODO package?
+            $type->package('Java', 'org.mayope.api.types'); # TODO
+            $self->add_params($class, $type);
+            $class->build;
         }
     }
 
@@ -39,12 +44,37 @@ sub build {
             $class->subpackage('response');
         }
 
-        foreach my $param ($message->params) {
-            $class->add_include($param->packages('Java'));
-            $class->add_field($param);
-        }
-
+        $self->add_params($class, $message);
         $class->build;
+    }
+
+    my $apiclass = Mayope::Make::Java::Class->new($basedir,
+         Mayope::Make::Model::Type->new( id => 'API',
+            comment => 'The Mayope API.' ));
+    $apiclass->add_include('org.mayope.api.request',
+         'org.mayope.api.response');
+
+    foreach my $action ($self->actions) {
+        $apiclass->add_method(Mayope::Make::Model::Method->new(
+            id => lcfirst($action->id),
+            params => { request => Mayope::Make::Model::Param->new(
+                id => 'request',
+                type => $action->request
+            ) },
+            returns => $action->response,
+            comment => $action->comment
+        ));
+    }
+
+    $apiclass->build;
+}
+
+sub add_params {
+    my ($self, $class, $type) = @_;
+
+    foreach my $param ($type->params) {
+        $class->add_include($param->packages('Java'));
+        $class->add_field($param);
     }
 }
 
