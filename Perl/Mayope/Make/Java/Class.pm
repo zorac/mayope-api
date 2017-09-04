@@ -1,8 +1,8 @@
-package ApiBuilder::Java::Class;
+package Mayope::Make::Java::Class;
 
 use strict;
 
-use base qw( ApiBuilder::Class );
+use base qw( Mayope::Make::Class );
 
 sub new {
     my ($this, $basedir, $type) = @_;

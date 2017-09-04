@@ -1,8 +1,8 @@
-package ApiBuilder::CSharp::Class;
+package Mayope::Make::CSharp::Class;
 
 use strict;
 
-use base qw( ApiBuilder::Class );
+use base qw( Mayope::Make::Class );
 
 sub new {
     my ($this, $basedir, $type) = @_;

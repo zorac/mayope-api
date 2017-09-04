@@ -1,10 +1,10 @@
-package ApiBuilder::CSharp::Builder;
+package Mayope::Make::CSharp::Builder;
 
 use strict;
 
-use ApiBuilder::CSharp::Class;
+use Mayope::Make::CSharp::Class;
 
-use base qw( ApiBuilder::Builder );
+use base qw( Mayope::Make::Builder );
 use constant TYPES => {
     Boolean => [ 'bool' ],
     String  => [ 'string' ],
@@ -31,7 +31,7 @@ sub build {
 
     foreach my $message ($self->messages) {
         my $id = $message->id;
-        my $class = ApiBuilder::CSharp::Class->new($basedir, $message);
+        my $class = Mayope::Make::CSharp::Class->new($basedir, $message);
 
         if ($id =~ /Request$/) {
             $class->subpackage('Requests');

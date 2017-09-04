@@ -1,4 +1,4 @@
-package ApiBuilder::File;
+package Mayope::Make::File;
 
 use strict;
 

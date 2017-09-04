@@ -1,6 +1,7 @@
-package ApiBuilder::Param;
+package Mayope::Make::Model::Param;
 
 use strict;
+use base qw( Mayope::Make::Model::Object );
 
 sub id {
     my ($self) = @_;

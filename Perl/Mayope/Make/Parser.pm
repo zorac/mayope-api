@@ -1,15 +1,15 @@
-package ApiBuilder::Parser;
+package Mayope::Make::Parser;
 
 use strict;
 
 use File::Slurp;
-use Tie::IxHash;
 
-use ApiBuilder::Action;
-use ApiBuilder::Api;
-use ApiBuilder::Message;
-use ApiBuilder::Param;
-use ApiBuilder::Type;
+use Mayope::Make::Model::Action;
+use Mayope::Make::Model::API;
+use Mayope::Make::Model::Message;
+use Mayope::Make::Model::Object;
+use Mayope::Make::Model::Param;
+use Mayope::Make::Model::Type;
 
 sub new {
     my ($this, $filename) = @_;
@@ -24,9 +24,9 @@ sub new {
 sub parse {
     my ($self) = @_;
 
-    $self->{type} = $self->hash();
-    $self->{message} = $self->hash();
-    $self->{action} = $self->hash();
+    $self->{type} = Mayope::Make::Model::Object->hash;
+    $self->{message} = Mayope::Make::Model::Object->hash;
+    $self->{action} = Mayope::Make::Model::Object->hash;
     $self->{lines} = read_file($self->{filename}, chomp => 1, array_ref => 1);
 
     while (defined(my $line = shift(@{$self->{lines}}))) {
@@ -41,7 +41,7 @@ sub parse {
                 $/x) {
             my $id = $1;
             my $generic = $2;
-            my $type = $self->hash('Type',
+            my $type = Mayope::Make::Model::Type->new(
                 id => $id
             );
 
@@ -57,7 +57,7 @@ sub parse {
                 $/x) {
             my $id = $1;
             my $parent = $2 ? $self->{message}{$2} : undef;
-            my $message = $self->hash('Message',
+            my $message = Mayope::Make::Model::Message->new(
                 id => $id,
                 parent => $parent
             );
@@ -71,7 +71,7 @@ sub parse {
             my $id = $1;
             my $request = $self->{message}{$2};
             my $response = $self->{message}{$3};
-            my $action = $self->hash('Action',
+            my $action = Mayope::Make::Model::Action->new(
                 id => $id,
                 request => $request,
                 response => $response
@@ -85,7 +85,7 @@ sub parse {
         }
     }
 
-    return $self->hash('Api',
+    return Mayope::Make::Model::API->new(
         types => $self->{type},
         messages => $self->{message},
         actions => $self->{action},
@@ -112,7 +112,7 @@ sub parse_comment {
 
 sub parse_type {
     my ($self, $obj) = @_;
-    my $params = $self->hash();
+    my $params = Mayope::Make::Model::Object->hash;
 
     $self->parse_comment($obj);
 
@@ -133,7 +133,7 @@ sub parse_type {
 
             die("Unknown type $type in\n$line\n") if (!$type);
 
-            my $param = $self->hash('Param',
+            my $param = Mayope::Make::Model::Param->new(
                 id => $id,
                 type => $type
             );
@@ -164,20 +164,6 @@ sub parse_type {
     }
 
     $obj->{params} = $params if (%{$params});
-}
-
-sub hash {
-    my ($self, $type, @content) = @_;
-    my %hash;
-
-    tie(%hash, 'Tie::IxHash');
-    %hash = @content;
-
-    my $hash = \%hash;
-
-    bless($hash, 'ApiBuilder::' . $type) if ($type);
-
-    return $hash;
 }
 
 1;

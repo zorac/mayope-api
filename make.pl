@@ -5,14 +5,17 @@ use strict;
 use Cwd;
 use Carp qw( cluck confess verbose );
 
-use ApiBuilder::Parser;
+use lib getcwd() . '/Perl';
+
+use Mayope::Make::Builder;
+use Mayope::Make::Parser;
 
 $SIG{__DIE__} = \&confess;
 $SIG{__WARN__} = \&cluck;
 
 my @langs = qw( CSharp Java );
 my $cwd = getcwd();
-my $parser = ApiBuilder::Parser->new($cwd . '/API.txt');
+my $parser = Mayope::Make::Parser->new($cwd . '/API.txt');
 my $api = $parser->parse();
 
 if (@ARGV && ($ARGV[0] eq '-d')) {
@@ -21,7 +24,7 @@ if (@ARGV && ($ARGV[0] eq '-d')) {
 }
 
 foreach my $lang (@langs) {
-    my $class = 'ApiBuilder::' . $lang . '::Builder';
+    my $class = 'Mayope::Make::' . $lang . '::Builder';
 
     eval('use ' . $class);
     die($@) if ($@);

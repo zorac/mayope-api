@@ -1,6 +1,8 @@
-package ApiBuilder::Builder;
+package Mayope::Make::Builder;
 
 use strict;
+
+use Mayope::Make::Class;
 
 sub new {
     my ($this, $api, $basedir) = @_;
@@ -24,19 +26,19 @@ sub api {
 sub types {
     my ($self) = @_;
 
-    return values($self->{api}{types});
+    return $self->api->types;
 }
 
 sub messages {
     my ($self) = @_;
 
-    return values($self->{api}{messages});
+    return $self->api->messages;
 }
 
 sub actions {
     my ($self) = @_;
 
-    return values($self->{api}{actions});
+    return $self->api->actions;
 }
 
 sub basedir {

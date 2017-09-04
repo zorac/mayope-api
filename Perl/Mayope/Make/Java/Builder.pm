@@ -1,10 +1,10 @@
-package ApiBuilder::Java::Builder;
+package Mayope::Make::Java::Builder;
 
 use strict;
 
-use ApiBuilder::Java::Class;
+use Mayope::Make::Java::Class;
 
-use base qw( ApiBuilder::Builder );
+use base qw( Mayope::Make::Builder );
 use constant TYPES => {
     Boolean => [ 'boolean' ],
     String  => [ 'String' ],
@@ -31,7 +31,7 @@ sub build {
 
     foreach my $message ($self->messages) {
         my $id = $message->id;
-        my $class = ApiBuilder::Java::Class->new($basedir, $message);
+        my $class = Mayope::Make::Java::Class->new($basedir, $message);
 
         if ($id =~ /Request$/) {
             $class->subpackage('request');
