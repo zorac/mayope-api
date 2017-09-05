@@ -1,7 +1,6 @@
 package Mayope::Make::CSharp::Class;
 
 use strict;
-
 use base qw( Mayope::Make::Class );
 
 sub new {
@@ -13,6 +12,8 @@ sub new {
     $self->{package} = 'Mayope.Api';
     $self->{include_groups} = [ qr/^System/, qr/^Microsoft/, qr/^Mayope/ ];
     $self->{includes_before_package} = 1;
+
+    $self->{id} = ('I' . $self->id) if ($self->abstraction == 2);
 
     return($self);
 }
@@ -34,6 +35,7 @@ sub begin_class {
     my ($self, $type) = @_;
     my $comment = $type->comment;
     my $parent = $type->parent;
+    my $class_type = $self->class_type;
 
     if ($comment) {
         $self->indentln(1, '/// <summary>');
@@ -41,8 +43,8 @@ sub begin_class {
         $self->indentln(1, '/// </summary>');
     }
 
-    $self->indent(1, 'public class ', $type->id);
-    $self->print(' : ', $parent->id) if ($parent); # TODO class
+    $self->indent(1, 'public ', $class_type, ' ', $self->id);
+    $self->print(' : ', $parent->class('CSharp')) if ($parent);
     $self->println;
     $self->indentln(1, '{');
 }
@@ -80,7 +82,7 @@ sub do_method {
         $self->indentln(2, '/// <summary>');
     }
 
-    $self->indent(2, 'public ', $returns, ' ', $name, '(');
+    $self->indent(2, $returns, ' ', $name, '('); # TODO public if abstract class?
 
     foreach my $param ($method->params) {
         $self->print(', ') if ($pindex++);

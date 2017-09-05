@@ -1,9 +1,9 @@
-package org.mayope.api.response;
+package org.mayope.api.responses;
 
 /**
  * A geneic boolean success/failure response.
  */
-public class SuccessResponse extends Response {
+public abstract class SuccessResponse implements Response {
     /**
      * True if the operation succeeded, false otherwise.
      */

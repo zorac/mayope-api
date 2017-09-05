@@ -7,7 +7,7 @@ namespace Mayope.Api.Responses;
     /// A successful login response including the authentication token to use in
     /// future authenticated requests.
     /// </summary>
-    public class LoginResponse : Response
+    public class LoginResponse : IResponse
     {
         /// <summary>
         /// An authentication token to use in future requests.

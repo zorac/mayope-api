@@ -1,18 +1,14 @@
 package Mayope::Make::Class;
 
 use strict;
-
 use base qw( Mayope::Make::File );
-
-use Mayope::Make::Model::Method;
-use Mayope::Make::Model::Param;
-use Mayope::Make::Model::Type;
 
 sub new {
     my ($this, $basedir, $type) = @_;
     my $self = $this->SUPER::new($basedir, $type->id);
 
     $self->{type} = $type;
+    $self->{abstraction} = $type->abstraction || 0;
     $self->{package} = undef;
     $self->{package_separator} = '.';
     $self->{includes} = { };
@@ -21,8 +17,33 @@ sub new {
     $self->{fields} = [ ];
     $self->{fields_have_methods} = 0;
     $self->{methods} = [ ];
+    $self->{class_types} = {
+        0    => 'class',
+        1    => 'abstract class',
+        2    => 'interface',
+        enum => 'enum'
+    };
 
     return($self);
+}
+
+sub abstraction {
+    my ($self) = @_;
+
+    return $self->{abstraction};
+}
+
+sub class_type {
+    my ($self) = @_;
+
+    return $self->{type}->enum ? $self->{class_types}{enum}
+        : $self->{class_types}{$self->abstraction};
+}
+
+sub package {
+    my ($self) = @_;
+
+    return $self->{package};
 }
 
 sub subpackage {

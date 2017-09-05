@@ -1,17 +1,19 @@
-package org.mayope.api.response;
+package org.mayope.api.responses;
 
 import java.util;
+
+import org.mayope.api.types;
 
 /**
  * An error response. This may be returned as an alternative response to any
  * action, normally with an error indication in the underlying protocol (e.g. a
  * 4xx or 5xx HTTP status code).
  */
-public class ErrorResponse extends Response {
+public class ErrorResponse implements Response {
     /**
      * A code giving the type of error which occurred.
      */
-    private String error;
+    private ErrorType error;
 
     /**
      * A more detailed, human-readable error message.
@@ -28,7 +30,7 @@ public class ErrorResponse extends Response {
      *
      * @return The value
      */
-    public String getError() {
+    public ErrorType getError() {
         return error;
     }
 
@@ -37,7 +39,7 @@ public class ErrorResponse extends Response {
      *
      * @param error The new value
      */
-    public void setError(String error) {
+    public void setError(ErrorType error) {
         this.error = error;
     }
 

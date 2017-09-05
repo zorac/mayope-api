@@ -8,6 +8,9 @@ namespace Mayope.Api.Requests;
     /// </summary>
     public class ListBranchesRequest : AuthenticatedRequest
     {
+        /// <summary>
+        /// The UUID of the tree to list the branches in.
+        /// </summary>
         [Required]
         public Guid Tree { get; set; }
     }

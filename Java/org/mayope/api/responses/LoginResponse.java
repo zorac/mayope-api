@@ -1,4 +1,4 @@
-package org.mayope.api.response;
+package org.mayope.api.responses;
 
 import java.util;
 
@@ -6,7 +6,7 @@ import java.util;
  * A successful login response including the authentication token to use in
  * future authenticated requests.
  */
-public class LoginResponse extends Response {
+public class LoginResponse implements Response {
     /**
      * An authentication token to use in future requests.
      */

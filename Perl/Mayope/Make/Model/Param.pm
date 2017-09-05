@@ -1,13 +1,7 @@
 package Mayope::Make::Model::Param;
 
 use strict;
-use base qw( Mayope::Make::Model::Object );
-
-sub id {
-    my ($self) = @_;
-
-    return $self->{id};
-}
+use base qw( Mayope::Make::Model::Node );
 
 sub type {
     my ($self) = @_;
@@ -31,12 +25,6 @@ sub required {
     my ($self) = @_;
 
     return $self->{optional} ? 0 : 1;
-}
-
-sub comment {
-    my ($self) = @_;
-
-    return $self->{comment};
 }
 
 sub class {

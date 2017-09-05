@@ -14,31 +14,46 @@ A list of values.
 TYPE Map<key,value>
 A map of key to value.
 
-TYPE Branch
-Details of a branch.
-    uuid        : UUID
-    id          : String
-    name        : String
-    description : String
-    type        : String
-    branches    ? List<Branch>
+TYPE ErrorType : Enum
+A type of error.
+    Unknown
+An unknown error.
+    Validation
+The input was invalid.
+    Authentication
+An authentication failure (i.e. invalid credentials, etc).
+    Authorization
+An authorization failure (i.e. user does not have access).
 
-TYPE Tree
+TYPE Node
+A node in a Myaope schema.
+    uuid        : UUID
+A universally unique identifier for the node.
+    id          : String
+An ID which must be unique amongst sibling nodes.
+    name        : String
+A plain-text name for the node.
+    description : String
+A free-text description of the node.
+
+TYPE Branch : Node
+Details of a branch in a Mayope schema.
+    type     : String
+The type of the branch's value.
+    branches ? Branch
+The child branches if the type involves a Tree.
+
+TYPE Tree : Node
 Details of a tree.
-    uuid        : UUID
-    id          : String
-    name        : String
-    description : String
     branches    ? List<Branch>
+The branches within this tree; empty if none, null if this is a stub record.
 
-TYPE Forest
+TYPE Forest : Node
 Details of a forest.
-    uuid        : UUID
-    id          : String
-    name        : String
-    description : String
     forests     ? List<Forest>
+The children of this forest; empty if none, null if this is a stub record.
     trees       ? List<Tree>
+The trees within this forest; empty if none, null if this is a stub record.
 
 MESSAGE Message
 A message.
@@ -53,7 +68,7 @@ MESSAGE ErrorResponse : Response
 An error response. This may be returned as an alternative response to any
 action, normally with an error indication in the underlying protocol (e.g. a
 4xx or 5xx HTTP status code).
-    error   : String
+    error   : ErrorType
 A code giving the type of error which occurred.
     message ? String
 A more detailed, human-readable error message.
@@ -83,34 +98,52 @@ authenticated requests.
     token : UUID
 An authentication token to use in future requests.
 
+MESSAGE LogoutRequest : AuthenticatedRequest
+A request to log out, expiring the given token.
+
+MESSAGE LogoutResponse : SuccessResponse
+A logout confirmation response.
+
 MESSAGE ListForestsRequest : AuthenticatedRequest
 A request for a list of forests.
     parent ? UUID
+The UUID of a forest to list the children of, or null for the root forests.
 
 MESSAGE ListForestsResponse
 A response containing a list of forests.
+    parent  ? UUID
+The UUID of the parent forest, or null if the root forests.
     forests : List<Forest>
+The forests found, empty if none.
 
 MESSAGE ListTreesRequest : AuthenticatedRequest
 A request for a list of trees.
     forest : UUID
+The UUID of the forest to list the trees in.
 
 MESSAGE ListTreesResponse
 A response containing a list of trees.
-    trees : List<Tree>
+    forest : UUID
+The UUID of the forest.
+    trees  : List<Tree>
+The trees in the forest, empty if none.
 
 MESSAGE ListBranchesRequest : AuthenticatedRequest
 A request for a list of branches.
     tree : UUID
+The UUID of the tree to list the branches in.
 
 MESSAGE ListBranchesResponse
 A response containing a list of branches.
+    tree     : UUID
+The UUID of the tree.
     branches : List<Branch>
+The branches in the tree, empty if none.
 
 ACTION Login LoginRequest LoginResponse
 The login action.
 
-ACTION Logout AuthenticatedRequest SuccessResponse
+ACTION Logout LogoutRequest LogoutResponse
 The logout action.
 
 ACTION ListForests ListForestsRequest ListForestsResponse

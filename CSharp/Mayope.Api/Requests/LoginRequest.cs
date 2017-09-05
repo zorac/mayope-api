@@ -5,7 +5,7 @@ namespace Mayope.Api.Requests;
     /// <summary>
     /// A login request, including username/password credentials.
     /// </summary>
-    public class LoginRequest : Request
+    public class LoginRequest : IRequest
     {
         /// <summary>
         /// The username to log in with.

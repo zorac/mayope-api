@@ -1,28 +1,22 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Mayope.Api.Types;
 {
     /// <summary>
     /// Details of a forest.
     /// </summary>
-    public class Forest
+    public class Forest : Node
     {
-        [Required]
-        public Guid Uuid { get; set; }
-
-        [Required]
-        public string Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public string Description { get; set; }
-
+        /// <summary>
+        /// The children of this forest; empty if none, null if this is a stub
+        /// record.
+        /// </summary>
         public IList<Forest> Forests { get; set; }
 
+        /// <summary>
+        /// The trees within this forest; empty if none, null if this is a stub
+        /// record.
+        /// </summary>
         public IList<Tree> Trees { get; set; }
     }
 }

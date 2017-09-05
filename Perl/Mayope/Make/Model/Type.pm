@@ -1,18 +1,22 @@
 package Mayope::Make::Model::Type;
 
 use strict;
-use base qw( Mayope::Make::Model::Object );
-
-sub id {
-    my ($self) = @_;
-
-    return $self->{id};
-}
+use base qw( Mayope::Make::Model::Node );
 
 sub parent {
     my ($self) = @_;
 
     return $self->{parent};
+}
+
+sub abstraction {
+    my ($self) = @_;
+
+    return $self->{abstraction} || 0;
+}
+
+sub enum {
+    return 0;
 }
 
 sub generic {
@@ -25,12 +29,6 @@ sub params {
     my ($self) = @_;
 
     return $self->{params} ? values($self->{params}) : ();
-}
-
-sub comment {
-    my ($self) = @_;
-
-    return $self->{comment};
 }
 
 sub class {

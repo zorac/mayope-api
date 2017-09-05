@@ -6,7 +6,7 @@ namespace Mayope.Api.Requests;
     /// <summary>
     /// A request including an authentication token.
     /// </summary>
-    public class AuthenticatedRequest : Request
+    public abstract class AuthenticatedRequest : IRequest
     {
         /// <summary>
         /// A token authenticating the user.

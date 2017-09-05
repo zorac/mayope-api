@@ -8,6 +8,9 @@ namespace Mayope.Api.Requests;
     /// </summary>
     public class ListTreesRequest : AuthenticatedRequest
     {
+        /// <summary>
+        /// The UUID of the forest to list the trees in.
+        /// </summary>
         [Required]
         public Guid Forest { get; set; }
     }

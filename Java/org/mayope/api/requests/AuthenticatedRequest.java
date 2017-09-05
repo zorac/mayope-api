@@ -1,11 +1,11 @@
-package org.mayope.api.request;
+package org.mayope.api.requests;
 
 import java.util;
 
 /**
  * A request including an authentication token.
  */
-public class AuthenticatedRequest extends Request {
+public abstract class AuthenticatedRequest implements Request {
     /**
      * A token authenticating the user.
      */

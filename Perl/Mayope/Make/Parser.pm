@@ -1,12 +1,15 @@
 package Mayope::Make::Parser;
 
 use strict;
+use constant REQUIRE_CLASS => { ErrorResponse => 1 };
 
 use File::Slurp;
 
 use Mayope::Make::Model::Action;
 use Mayope::Make::Model::API;
+use Mayope::Make::Model::Enum;
 use Mayope::Make::Model::Message;
+use Mayope::Make::Model::Node;
 use Mayope::Make::Model::Object;
 use Mayope::Make::Model::Param;
 use Mayope::Make::Model::Type;
@@ -37,15 +40,31 @@ sub parse {
                                 \s* , \s* \w+
                             )*
                         ) \s* >
+                    )? (?:
+                        \s* : \s* (\w+)
                     )? \s*
                 $/x) {
             my $id = $1;
             my $generic = $2;
-            my $type = Mayope::Make::Model::Type->new( id => $id );
+            my $enum = ($3 && ($3 eq 'Enum')) ? 1 : 0;
+            my $parent = $3 ? $self->{type}{$3} : undef;
+            my $type = $enum ? Mayope::Make::Model::Enum->new
+                             : Mayope::Make::Model::Type->new;
 
+            die("Unknown parent type $3 in\n$line\n")
+                if ($3 && !$parent && !$enum);
+
+            $type->{id} = $id;
             $type->{generic} = [ split(/\s*,\s*/, $generic) ] if ($generic);
+            $type->{parent} = $parent if ($parent);
             $self->{type}{$id} = $type;
-            $self->parse_type($type);
+
+            if ($enum) {
+                $self->parse_enum($type);
+            } else {
+                $type->{abstraction} = REQUIRE_CLASS->{$id} ? 0 : 1;
+                $self->parse_type($type);
+            }
         } elsif ($line =~ /^
                     MESSAGE \s+ (\w+) (?:
                         \s* : \s* (\w+)
@@ -55,7 +74,11 @@ sub parse {
             my $parent = $2 ? $self->{message}{$2} : undef;
             my $message = Mayope::Make::Model::Message->new( id => $id );
 
+            die("Unknown parent message $2 in\n$line\n") if ($2 && !$parent);
+
             $message->{parent} = $parent if ($parent);
+            $message->{abstraction} = REQUIRE_CLASS->{$id} ? 0
+                : ($parent && $parent->parent) ? 1 : 2;
             $self->{message}{$id} = $message;
             $self->parse_type($message);
         } elsif ($line =~ /^
@@ -70,6 +93,8 @@ sub parse {
                 response => $response
             );
 
+            $request->{abstraction} = 0;
+            $response->{abstraction} = 0;
             $self->{action}{$id} = $action;
             $self->parse_comment($action);
         } elsif ($line !~ /^\s*$/) {
@@ -123,6 +148,7 @@ sub parse_type {
             my $type = $self->{type}{$3};
             my $generic = $4;
 
+            $type->{abstraction} = 0;
             die("Unknown type $3 in\n$line\n") if (!$type);
 
             my $param = Mayope::Make::Model::Param->new(
@@ -139,7 +165,10 @@ sub parse_type {
                     if (@generic != @{$type->{generic}});
 
                 $param->{generic} = [ map {
-                    $self->{type}{$_} or die("Unkown type $_ in\n$line\n");
+                    my $t = $self->{type}{$_};
+                    die("Unkown type $_ in\n$line\n") if (!$t);
+                    $t->{abstraction} = 0;
+                    $t;
                 } @generic ];
             } elsif ($type->{generic}) {
                 die("Missing generic parameters in\n$line\n");
@@ -156,6 +185,29 @@ sub parse_type {
     }
 
     $obj->{params} = $params if (%{$params});
+}
+
+sub parse_enum {
+    my ($self, $enum) = @_;
+    my $values = Mayope::Make::Model::Object->hash;
+
+    $self->parse_comment($enum);
+
+    while (defined(my $line = shift(@{$self->{lines}}))) {
+        if ($line =~ /^ \s+ (\w+) \s* $/x) {
+            my $id = $1;
+            my $value = Mayope::Make::Model::Node->new( id => $id );
+
+            $self->parse_comment($value);
+            $values->{$id} = $value;
+        } elsif ($line =~ /^\s*$/) {
+            last;
+        } else {
+            die("Unexpected line in parse_enum()\n$line\n");
+        }
+    }
+
+    $enum->{values} = $values;
 }
 
 1;

@@ -1,7 +1,6 @@
 package Mayope::Make::Java::Class;
 
 use strict;
-
 use base qw( Mayope::Make::Class );
 
 sub new {
@@ -15,6 +14,12 @@ sub new {
     $self->{fields_have_methods} = 1;
 
     return($self);
+}
+
+sub subpackage {
+    my ($self, $subpackage) = @_;
+
+    $self->SUPER::subpackage(lc($subpackage));
 }
 
 sub begin_package {
@@ -34,6 +39,7 @@ sub begin_class {
     my ($self, $type) = @_;
     my $comment = $type->comment;
     my $parent = $type->parent;
+    my $class_type = $self->class_type;
 
     if ($comment) {
         $self->println('/**');
@@ -41,8 +47,9 @@ sub begin_class {
         $self->println(' */');
     }
 
-    $self->print('public class ', $type->id);
-    $self->print(' extends ', $parent->id) if ($parent); # TODO class
+    $self->print('public ', $class_type, ' ', $type->id);
+    $self->print((($parent->abstraction == 2)
+        ? ' implements ' : ' extends '), $parent->class('Java')) if ($parent);
     $self->println(' {');
 }
 
@@ -99,7 +106,7 @@ sub do_field_methods {
 
 sub do_method {
     my ($self, $method, $index) = @_;
-    my $name = $method->id;
+    my $name = lcfirst($method->id);
     my $returns = $method->returns->class('Java');
     my $comment = $method->comment;
     my $pindex = 0;
@@ -112,7 +119,7 @@ sub do_method {
         $self->indentln(1, ' */');
     }
 
-    $self->indent(1, 'public ', $returns, ' ', $name, '(');
+    $self->indent(1, $returns, ' ', $name, '('); # TODO public if abstract class?
 
     foreach my $param ($method->params) {
         $self->print(', ') if ($pindex++);

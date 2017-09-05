@@ -6,31 +6,31 @@ namespace Mayope.Api;
     /// <summary>
     /// The Mayope API.
     /// </summary>
-    public class Api
+    public interface IApi
     {
         /// <summary>
         /// The login action.
         /// <summary>
-        public LoginResponse Login(LoginRequest request);
+        LoginResponse Login(LoginRequest request);
 
         /// <summary>
         /// The logout action.
         /// <summary>
-        public SuccessResponse Logout(AuthenticatedRequest request);
+        LogoutResponse Logout(LogoutRequest request);
 
         /// <summary>
         /// The forest list action.
         /// <summary>
-        public ListForestsResponse ListForests(ListForestsRequest request);
+        ListForestsResponse ListForests(ListForestsRequest request);
 
         /// <summary>
         /// The tree list action.
         /// <summary>
-        public ListTreesResponse ListTrees(ListTreesRequest request);
+        ListTreesResponse ListTrees(ListTreesRequest request);
 
         /// <summary>
         /// The branch list action.
         /// <summary>
-        public ListBranchesResponse ListBranches(ListBranchesRequest request);
+        ListBranchesResponse ListBranches(ListBranchesRequest request);
     }
 }

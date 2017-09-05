@@ -1,9 +1,9 @@
-package org.mayope.api.request;
+package org.mayope.api.requests;
 
 /**
  * A login request, including username/password credentials.
  */
-public class LoginRequest extends Request {
+public class LoginRequest implements Request {
     /**
      * The username to log in with.
      */

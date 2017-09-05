@@ -1,29 +1,21 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Mayope.Api.Types;
 {
     /// <summary>
-    /// Details of a branch.
+    /// Details of a branch in a Mayope schema.
     /// </summary>
-    public class Branch
+    public class Branch : Node
     {
-        [Required]
-        public Guid Uuid { get; set; }
-
-        [Required]
-        public string Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public string Description { get; set; }
-
+        /// <summary>
+        /// The type of the branch's value.
+        /// </summary>
         [Required]
         public string Type { get; set; }
 
-        public IList<Branch> Branches { get; set; }
+        /// <summary>
+        /// The child branches if the type involves a Tree.
+        /// </summary>
+        public Branch Branches { get; set; }
     }
 }

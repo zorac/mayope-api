@@ -5,7 +5,7 @@ namespace Mayope.Api.Responses;
     /// <summary>
     /// A geneic boolean success/failure response.
     /// </summary>
-    public class SuccessResponse : Response
+    public abstract class SuccessResponse : IResponse
     {
         /// <summary>
         /// True if the operation succeeded, false otherwise.

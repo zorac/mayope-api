@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+using Mayope.Api.Types;
+
 namespace Mayope.Api.Responses;
 {
     /// <summary>
@@ -8,13 +10,13 @@ namespace Mayope.Api.Responses;
     /// any action, normally with an error indication in the underlying protocol
     /// (e.g. a 4xx or 5xx HTTP status code).
     /// </summary>
-    public class ErrorResponse : Response
+    public class ErrorResponse : IResponse
     {
         /// <summary>
         /// A code giving the type of error which occurred.
         /// </summary>
         [Required]
-        public string Error { get; set; }
+        public ErrorType Error { get; set; }
 
         /// <summary>
         /// A more detailed, human-readable error message.

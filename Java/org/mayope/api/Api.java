@@ -1,34 +1,34 @@
 package org.mayope.api;
 
-import org.mayope.api.request;
-import org.mayope.api.response;
+import org.mayope.api.requests;
+import org.mayope.api.responses;
 
 /**
  * The Mayope API.
  */
-public class API {
+public interface Api {
     /**
      * The login action.
      */
-    public LoginResponse login(LoginRequest request);
+    LoginResponse login(LoginRequest request);
 
     /**
      * The logout action.
      */
-    public SuccessResponse logout(AuthenticatedRequest request);
+    LogoutResponse logout(LogoutRequest request);
 
     /**
      * The forest list action.
      */
-    public ListForestsResponse listForests(ListForestsRequest request);
+    ListForestsResponse listForests(ListForestsRequest request);
 
     /**
      * The tree list action.
      */
-    public ListTreesResponse listTrees(ListTreesRequest request);
+    ListTreesResponse listTrees(ListTreesRequest request);
 
     /**
      * The branch list action.
      */
-    public ListBranchesResponse listBranches(ListBranchesRequest request);
+    ListBranchesResponse listBranches(ListBranchesRequest request);
 }

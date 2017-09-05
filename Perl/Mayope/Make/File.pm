@@ -22,6 +22,12 @@ sub new {
     return($self);
 }
 
+sub id {
+    my ($self) = @_;
+
+    return $self->{id};
+}
+
 sub filename {
     my ($self) = @_;
     my $filename = $self->{basedir} . '/';

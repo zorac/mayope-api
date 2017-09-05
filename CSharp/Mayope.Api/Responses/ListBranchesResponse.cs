@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,6 +11,15 @@ namespace Mayope.Api.Responses;
     /// </summary>
     public class ListBranchesResponse
     {
+        /// <summary>
+        /// The UUID of the tree.
+        /// </summary>
+        [Required]
+        public Guid Tree { get; set; }
+
+        /// <summary>
+        /// The branches in the tree, empty if none.
+        /// </summary>
         [Required]
         public IList<Branch> Branches { get; set; }
     }
