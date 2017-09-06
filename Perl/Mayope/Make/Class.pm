@@ -17,6 +17,7 @@ sub new {
     $self->{fields} = [ ];
     $self->{fields_have_methods} = 0;
     $self->{methods} = [ ];
+    $self->{values} = [ ];
     $self->{class_types} = {
         0    => 'class',
         1    => 'abstract class',
@@ -85,6 +86,12 @@ sub add_method {
     push(@{$self->{methods}}, @methods);
 }
 
+sub add_value {
+    my ($self, @values) = @_;
+
+    push(@{$self->{values}}, @values);
+}
+
 sub build_file {
     my ($self) = @_;
     my $type = $self->{type};
@@ -92,6 +99,7 @@ sub build_file {
     my %includes = %{$self->{includes}};
     my @include_groups = @{$self->{include_groups}}, qr/./;
     my $includes_before_package = $self->{includes_before_package};
+    my @values = @{$self->{values}};
     my @fields = @{$self->{fields}};
     my $fields_have_methods = $self->{fields_have_methods};
     my @methods = @{$self->{methods}};
@@ -114,6 +122,10 @@ sub build_file {
 
     $self->begin_package($package) if ($includes_before_package);
     $self->begin_class($type);
+
+    foreach my $value (@values) {
+        $self->do_value($value, $#values - $index++);
+    }
 
     foreach my $field (@fields) {
         $self->do_field($field, $index++);
@@ -148,18 +160,23 @@ sub begin_class {
     # Implement in subclass
 }
 
+sub do_value {
+    my ($self, $value, $not_last) = @_;
+    # Implement in subclass
+}
+
 sub do_field {
-    my ($self, $field, $index) = @_;
+    my ($self, $field, $not_first) = @_;
     # Implement in subclass
 }
 
 sub do_field_methods {
-    my ($self, $field, $index) = @_;
+    my ($self, $field, $not_first) = @_;
     # Implement in subclass
 }
 
 sub do_method {
-    my ($self, $method, $index) = @_;
+    my ($self, $method, $not_first) = @_;
     # Implement in subclass
 }
 

@@ -53,12 +53,25 @@ sub begin_class {
     $self->println(' {');
 }
 
+sub do_value {
+    my ($self, $value, $not_last) = @_;
+    my $comment = $value->comment;
+
+    if ($comment) {
+        $self->indentln(1, '/**');
+        $self->comment(1, ' * ', $comment);
+        $self->indentln(1, ' */');
+    }
+
+    $self->indentln(1, $value->id, $not_last ? ',' : ';');
+}
+
 sub do_field {
-    my ($self, $field, $index) = @_;
+    my ($self, $field, $not_first) = @_;
     my $class = $field->class('Java');
     my $comment = $field->comment;
 
-    $self->println if ($index);
+    $self->println if ($not_first);
 
     if ($comment) {
         $self->indentln(1, '/**');
@@ -105,13 +118,13 @@ sub do_field_methods {
 }
 
 sub do_method {
-    my ($self, $method, $index) = @_;
+    my ($self, $method, $not_first) = @_;
     my $name = lcfirst($method->id);
     my $returns = $method->returns->class('Java');
     my $comment = $method->comment;
     my $pindex = 0;
 
-    $self->println if ($index);
+    $self->println if ($not_first);
 
     if ($comment) {
         $self->indentln(1, '/**');

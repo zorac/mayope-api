@@ -39,7 +39,7 @@ sub build {
             $type->package($lang, $class->package);
 
             if ($type->enum) {
-                # TODO
+                $class->add_value($type->values);
             } else {
                 $self->add_params($class, $type);
             }

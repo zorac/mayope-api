@@ -10,7 +10,7 @@ sub enum {
 sub values {
     my ($self) = @_;
 
-    return @{$self->{values}};
+    return values($self->{values});
 }
 
 1;

@@ -49,13 +49,26 @@ sub begin_class {
     $self->indentln(1, '{');
 }
 
+sub do_value {
+    my ($self, $value, $not_last) = @_;
+    my $comment = $value->comment;
+
+    if ($comment) {
+        $self->indentln(2, '/// <summary>');
+        $self->comment(2, '/// ', $comment);
+        $self->indentln(2, '/// </summary>');
+    }
+
+    $self->indentln(2, $value->id, $not_last ? ',' : '');
+}
+
 sub do_field {
-    my ($self, $field, $index) = @_;
+    my ($self, $field, $not_first) = @_;
     my $class = $field->class('CSharp');
     my $name = ucfirst($field->id);
     my $comment = $field->comment;
 
-    $self->println if ($index);
+    $self->println if ($not_first);
 
     if ($comment) {
         $self->indentln(2, '/// <summary>');
@@ -68,13 +81,13 @@ sub do_field {
 }
 
 sub do_method {
-    my ($self, $method, $index) = @_;
+    my ($self, $method, $not_first) = @_;
     my $name = $method->id;
     my $returns = $method->returns->class('CSharp');
     my $comment = $method->comment;
     my $pindex = 0;
 
-    $self->println if ($index);
+    $self->println if ($not_first);
 
     if ($comment) {
         $self->indentln(2, '/// <summary>');
