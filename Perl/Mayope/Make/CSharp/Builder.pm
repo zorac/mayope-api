@@ -6,8 +6,8 @@ use base qw( Mayope::Make::ClassBuilder );
 use Mayope::Make::CSharp::Class;
 
 sub new {
-    my ($this, $api, $basedir) = @_;
-    my $self = $this->SUPER::new($api, $basedir, 'CSharp');
+    my ($this, $config, $api, $basedir) = @_;
+    my $self = $this->SUPER::new($config, $api, $basedir, 'CSharp');
 
     $self->{raw_types} = {
         Boolean => [ 'bool' ],
@@ -16,7 +16,19 @@ sub new {
         List    => [ 'IList', 'System.Collections.Generic' ],
         Map     => [ 'IDictionary', 'System.Collections.Generic' ],
     };
-    $self->{required_packages} = [ 'System.ComponentModel.DataAnnotations' ];
+
+    if ($self->config('mancmmb')) {
+        $self->packages_for('required', 'Microsoft.AspNetCore.Mvc.ModelBinding');
+    }
+
+    if ($self->config('nsj')) {
+        $self->packages_for('enum', 'Newtonsoft.Json');
+        $self->packages_for('required', 'Newtonsoft.Json');
+    }
+
+    if ($self->config('scmda')) {
+        $self->packages_for('required', 'System.ComponentModel.DataAnnotations');
+    }
 
     return($self);
 }

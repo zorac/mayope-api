@@ -4,10 +4,11 @@ use strict;
 use base qw( Mayope::Make::File );
 
 sub new {
-    my ($this, $basedir, $type) = @_;
+    my ($this, $config, $basedir, $type) = @_;
     my $self = $this->SUPER::new($basedir, $type->id);
 
     $self->{type} = $type;
+    $self->{config} = $config;
     $self->{abstraction} = $type->abstraction || 0;
     $self->{package} = undef;
     $self->{package_separator} = '.';
@@ -26,6 +27,12 @@ sub new {
     };
 
     return($self);
+}
+
+sub config {
+    my ($self, $option) = @_;
+
+    return $self->{config}{$option};
 }
 
 sub abstraction {
@@ -97,7 +104,7 @@ sub build_file {
     my $type = $self->{type};
     my $package = $self->{package};
     my %includes = %{$self->{includes}};
-    my @include_groups = @{$self->{include_groups}}, qr/./;
+    my @include_groups = (@{$self->{include_groups}}, qr/.*/);
     my $includes_before_package = $self->{includes_before_package};
     my @values = @{$self->{values}};
     my @fields = @{$self->{fields}};

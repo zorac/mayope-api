@@ -1,8 +1,11 @@
+using Newtonsoft.Json;
+
 namespace Mayope.Api.Types;
 {
     /// <summary>
     /// A type of error.
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum ErrorType
     {
         /// <summary>

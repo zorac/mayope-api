@@ -8,18 +8,33 @@ use Mayope::Make::Model::Param;
 use Mayope::Make::Model::Type;
 
 sub new {
-    my ($this, $api, $basedir, $lang) = @_;
-    my $self = $this->SUPER::new($api, $basedir);
+    my ($this, $config, $api, $basedir, $lang) = @_;
+    my $self = $this->SUPER::new($config, $api, $basedir);
 
     $self->{lang} = $lang;
     $self->{raw_types} = { };
-    $self->{required_packages} = [ ];
+    $self->{packages_for} = {
+        enum => [ ],
+        required => [ ],
+    };
 
     return($self);
 }
 
+sub packages_for {
+    my ($self, $what, @packages) = @_;
+    my $array = $self->{packages_for}{$what};
+
+    if (@packages) {
+        push(@{$array}, @packages);
+    } else {
+        return @{$array};
+    }
+}
+
 sub build {
     my ($self) = @_;
+    my $config = $self->{config};
     my $basedir = $self->{basedir};
     my $lang = $self->{lang};
     my $class_class = 'Mayope::Make::' . $lang . '::Class';
@@ -32,13 +47,14 @@ sub build {
             $type->class($lang, $raw->[0]);
             $type->package($lang, $raw->[1]) if ($#{$raw});
         } else {
-            my $class = $class_class->new($basedir, $type);
+            my $class = $class_class->new($config, $basedir, $type);
 
             $class->subpackage('Types');
             $type->class($lang, $class->id);
             $type->package($lang, $class->package);
 
             if ($type->enum) {
+                $class->add_include($self->packages_for('enum'));
                 $class->add_value($type->values);
             } else {
                 $self->add_params($class, $type);
@@ -50,7 +66,7 @@ sub build {
 
     foreach my $message ($self->messages) {
         my $id = $message->id;
-        my $class = $class_class->new($basedir, $message);
+        my $class = $class_class->new($config, $basedir, $message);
 
         if ($id =~ /Request$/) {
             $class->subpackage('Requests');
@@ -64,10 +80,10 @@ sub build {
         $class->build;
     }
 
-    my $apiclass = $class_class->new($basedir, Mayope::Make::Model::Type->new(
-        id => 'Api',
+    my $apiclass = $class_class->new($config, $basedir, Mayope::Make::Model::Type->new(
+        id => 'MayopeService',
         abstraction => 2,
-        comment => 'The Mayope API.'
+        comment => 'A Mayope API Service.'
     ));
 
     foreach my $action ($self->actions) {
@@ -90,13 +106,15 @@ sub build {
 sub add_params {
     my ($self, $class, $type) = @_;
     my $lang = $self->{lang};
-    my @required_packages = @{$self->{required_packages}};
+    my $required = 0;
 
     foreach my $param ($type->params) {
-        $class->add_include(@required_packages) if ($param->required);
+        $required = 1 if ($param->required);
         $class->add_include($param->packages($lang));
         $class->add_field($param);
     }
+
+    $class->add_include($self->packages_for('required')) if ($required);
 }
 
 1;

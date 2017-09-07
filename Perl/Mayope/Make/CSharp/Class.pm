@@ -4,8 +4,8 @@ use strict;
 use base qw( Mayope::Make::Class );
 
 sub new {
-    my ($this, $basedir, $type) = @_;
-    my $self = $this->SUPER::new($basedir, $type);
+    my ($this, $config, $basedir, $type) = @_;
+    my $self = $this->SUPER::new($config, $basedir, $type);
 
     $self->{subdir} = 'Mayope.Api';
     $self->{extension} = 'cs';
@@ -43,6 +43,11 @@ sub begin_class {
         $self->indentln(1, '/// </summary>');
     }
 
+    if ($class_type eq 'enum') {
+        $self->indentln(1, '[JsonConverter(typeof(StringEnumConverter))]')
+            if ($self->config('nsj'));
+    }
+
     $self->indent(1, 'public ', $class_type, ' ', $self->id);
     $self->print(' : ', $parent->class('CSharp')) if ($parent);
     $self->println;
@@ -76,7 +81,12 @@ sub do_field {
         $self->indentln(2, '/// </summary>');
     }
 
-    $self->indentln(2, '[Required]') if ($field->required);
+    if ($field->required) {
+        $self->indentln(2, '[Required]') if ($self->config('scmda'));
+        $self->indentln(2, '[BindRequired]') if ($self->config('mancmmb'));
+        $self->indentln(2, '[JsonRequired]') if ($self->config('nsj'));
+    }
+
     $self->indentln(2, 'public ', $class, ' ', $name, ' { get; set; }');
 }
 

@@ -4,9 +4,9 @@ using Mayope.Api.Responses;
 namespace Mayope.Api;
 {
     /// <summary>
-    /// The Mayope API.
+    /// A Mayope API Service.
     /// </summary>
-    public interface IApi
+    public interface IMayopeService
     {
         /// <summary>
         /// The login action.

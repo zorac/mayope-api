@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using Newtonsoft.Json;
+
 namespace Mayope.Api.Requests;
 {
     /// <summary>
@@ -11,12 +13,14 @@ namespace Mayope.Api.Requests;
         /// The username to log in with.
         /// </summary>
         [Required]
+        [JsonRequired]
         public string Username { get; set; }
 
         /// <summary>
         /// The user's password.
         /// </summary>
         [Required]
+        [JsonRequired]
         public string Password { get; set; }
     }
 }

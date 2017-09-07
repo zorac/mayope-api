@@ -13,7 +13,15 @@ use Mayope::Make::Parser;
 $SIG{__DIE__} = \&confess;
 $SIG{__WARN__} = \&cluck;
 
-my @langs = qw( CSharp Java );
+my %langs = (
+    CSharp => {
+        mancmmb => 0, # Microsoft.AspNetCore.Mvc.ModelBinding
+        nsj     => 1, # Newtonsoft.Json
+        scmda   => 1, # System.ComponentModel.DataAnnotations
+    },
+    Java => { },
+);
+
 my $cwd = getcwd();
 my $parser = Mayope::Make::Parser->new($cwd . '/API.txt');
 my $api = $parser->parse();
@@ -23,13 +31,13 @@ if (@ARGV && ($ARGV[0] eq '-d')) {
     exit(0);
 }
 
-foreach my $lang (@langs) {
+foreach my $lang (keys(%langs)) {
     my $class = 'Mayope::Make::' . $lang . '::Builder';
 
     eval('use ' . $class);
     die($@) if ($@);
 
-    my $builder = $class->new($api, $cwd . '/' . $lang);
+    my $builder = $class->new($langs{$lang}, $api, $cwd . '/' . $lang);
 
     $builder->build();
 }

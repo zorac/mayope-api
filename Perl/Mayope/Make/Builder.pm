@@ -5,11 +5,12 @@ use strict;
 use Mayope::Make::Class;
 
 sub new {
-    my ($this, $api, $basedir) = @_;
+    my ($this, $config, $api, $basedir) = @_;
     my $class = ref($this) || $this;
     my $self = {
         api => $api,
-        basedir => $basedir
+        basedir => $basedir,
+        config => $config,
     };
 
     bless($self, $class);
@@ -45,6 +46,12 @@ sub basedir {
     my ($self) = @_;
 
     return $self->{basedir};
+}
+
+sub config {
+    my ($self, $option) = @_;
+
+    return $self->{config}{$option};
 }
 
 sub build {

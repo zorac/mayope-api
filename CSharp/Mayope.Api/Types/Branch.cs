@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using Newtonsoft.Json;
+
 namespace Mayope.Api.Types;
 {
     /// <summary>
@@ -11,6 +13,7 @@ namespace Mayope.Api.Types;
         /// The type of the branch's value.
         /// </summary>
         [Required]
+        [JsonRequired]
         public string Type { get; set; }
 
         /// <summary>

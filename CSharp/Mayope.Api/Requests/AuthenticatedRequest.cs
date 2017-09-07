@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
+using Newtonsoft.Json;
+
 namespace Mayope.Api.Requests;
 {
     /// <summary>
@@ -12,6 +14,7 @@ namespace Mayope.Api.Requests;
         /// A token authenticating the user.
         /// </summary>
         [Required]
+        [JsonRequired]
         public Guid Token { get; set; }
     }
 }

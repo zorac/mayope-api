@@ -4,9 +4,9 @@ import org.mayope.api.requests;
 import org.mayope.api.responses;
 
 /**
- * The Mayope API.
+ * A Mayope API Service.
  */
-public interface Api {
+public interface MayopeService {
     /**
      * The login action.
      */

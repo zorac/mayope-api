@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 using Mayope.Api.Types;
 
+using Newtonsoft.Json;
+
 namespace Mayope.Api.Responses;
 {
     /// <summary>
@@ -20,6 +22,7 @@ namespace Mayope.Api.Responses;
         /// The forests found, empty if none.
         /// </summary>
         [Required]
+        [JsonRequired]
         public IList<Forest> Forests { get; set; }
     }
 }

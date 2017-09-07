@@ -4,8 +4,8 @@ use strict;
 use base qw( Mayope::Make::Class );
 
 sub new {
-    my ($this, $basedir, $type) = @_;
-    my $self = $this->SUPER::new($basedir, $type);
+    my ($this, $config, $basedir, $type) = @_;
+    my $self = $this->SUPER::new($config, $basedir, $type);
 
     $self->{subdir} = 'org/mayope/api';
     $self->{extension} = 'java';

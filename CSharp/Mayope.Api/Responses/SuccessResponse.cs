@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using Newtonsoft.Json;
+
 namespace Mayope.Api.Responses;
 {
     /// <summary>
@@ -11,6 +13,7 @@ namespace Mayope.Api.Responses;
         /// True if the operation succeeded, false otherwise.
         /// </summary>
         [Required]
+        [JsonRequired]
         public bool Success { get; set; }
     }
 }

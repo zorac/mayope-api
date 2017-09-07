@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 using Mayope.Api.Types;
 
+using Newtonsoft.Json;
+
 namespace Mayope.Api.Responses;
 {
     /// <summary>
@@ -16,6 +18,7 @@ namespace Mayope.Api.Responses;
         /// A code giving the type of error which occurred.
         /// </summary>
         [Required]
+        [JsonRequired]
         public ErrorType Error { get; set; }
 
         /// <summary>
