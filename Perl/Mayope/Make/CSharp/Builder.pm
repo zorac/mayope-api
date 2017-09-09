@@ -11,6 +11,7 @@ sub new {
 
     $self->{raw_types} = {
         Boolean => [ 'bool' ],
+        Integer => [ 'int' ],
         String  => [ 'string' ],
         UUID    => [ 'Guid', 'System' ],
         List    => [ 'IList', 'System.Collections.Generic' ],

@@ -22,7 +22,7 @@ public class Tree extends Node {
      *
      * @return The value
      */
-    public List getBranches() {
+    public List<Branch> getBranches() {
         return branches;
     }
 
@@ -32,7 +32,7 @@ public class Tree extends Node {
      *
      * @param branches A new value
      */
-    public void setBranches(List branches) {
+    public void setBranches(List<Branch> branches) {
         this.branches = branches;
     }
 }

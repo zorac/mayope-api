@@ -70,7 +70,7 @@ public class ErrorResponse implements Response {
      *
      * @return The value
      */
-    public Map getDetails() {
+    public Map<String,String> getDetails() {
         return details;
     }
 
@@ -79,7 +79,7 @@ public class ErrorResponse implements Response {
      *
      * @param details A new value
      */
-    public void setDetails(Map details) {
+    public void setDetails(Map<String,String> details) {
         this.details = details;
     }
 }

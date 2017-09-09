@@ -1,18 +1,79 @@
-TYPE Boolean
+RAW TYPE Boolean
 A boolean value - true/false.
 
-TYPE String
+RAW TYPE Integer
+An integer value.
+
+RAW TYPE String
 A string of UTF8 characters.
 
-TYPE UUID
+RAW TYPE UUID
 A UUID/GUID, a 16-byte value often displayed as 32 hexadecimal digits in the
 format 00000000-0000-0000-0000-000000000000.
 
-TYPE List<value>
+RAW TYPE List<value>
 A list of values.
 
-TYPE Map<key,value>
+RAW TYPE Map<key,value>
 A map of key to value.
+
+CORE TYPE BranchType : Enum
+Possible types of a branch.
+    Boolean
+A boolean true/false values.
+    Integer
+An integer value; sizes[0] is the number of bits (8, 16, 32, 64), sizes[1] is 0
+for unsigned, 1 for signed.
+    Float
+A floating-point number; sizes[0] is the number of bits (32, 64).
+    Decimal
+A decimal number; sizes[0] is the maximum number of digits before the decimal
+point, sizes[1] is the maximum number of digits after.
+    String
+A string of UTF8 charcters; sizes[0] is the maximum length in characters.
+    Uuid
+A UUID.
+    List
+An ordered list of values; branches[0] is the type of the values.
+    Set
+An unordered set of values; branches[0] is the type of the values.
+    Map
+A map of values; branches[0] is the type of the keys, branches[1] is the type
+of the values.
+    Tree
+A tree of sub-values, as specified by branches[].
+
+CORE TYPE Node
+A node in a Myaope schema.
+    uuid        : UUID
+A universally unique identifier for the node.
+    id          : String
+An ID which must be unique amongst sibling nodes.
+    name        : String
+A plain-text name for the node.
+    description : String
+A free-text description of the node.
+
+CORE TYPE Branch : Node
+Details of a branch in a Mayope schema.
+    type     : BranchType
+The type of the branch's value.
+    sizes    ? List<Integer>
+Additional size specifiers for the type if needed.
+    branches ? List<Branch>
+The child branch type(s) if not a single-valued type.
+
+CORE TYPE Tree : Node
+Details of a tree.
+    branches ? List<Branch>
+The branches within this tree; empty if none, null if this is a stub record.
+
+CORE TYPE Forest : Node
+Details of a forest.
+    forests ? List<Forest>
+The children of this forest; empty if none, null if this is a stub record.
+    trees   ? List<Tree>
+The trees within this forest; empty if none, null if this is a stub record.
 
 TYPE ErrorType : Enum
 A type of error.
@@ -24,36 +85,6 @@ The input was invalid.
 An authentication failure (i.e. invalid credentials, etc).
     Authorization
 An authorization failure (i.e. user does not have access).
-
-TYPE Node
-A node in a Myaope schema.
-    uuid        : UUID
-A universally unique identifier for the node.
-    id          : String
-An ID which must be unique amongst sibling nodes.
-    name        : String
-A plain-text name for the node.
-    description : String
-A free-text description of the node.
-
-TYPE Branch : Node
-Details of a branch in a Mayope schema.
-    type     : String
-The type of the branch's value.
-    branches ? Branch
-The child branches if the type involves a Tree.
-
-TYPE Tree : Node
-Details of a tree.
-    branches    ? List<Branch>
-The branches within this tree; empty if none, null if this is a stub record.
-
-TYPE Forest : Node
-Details of a forest.
-    forests     ? List<Forest>
-The children of this forest; empty if none, null if this is a stub record.
-    trees       ? List<Tree>
-The trees within this forest; empty if none, null if this is a stub record.
 
 MESSAGE Message
 A message.

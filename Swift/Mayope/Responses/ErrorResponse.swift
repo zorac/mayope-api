@@ -3,8 +3,8 @@
 //
 
 /// An error response. This may be returned as an alternative response to any
-/// action, normally with an error indication in the underlying protocol (e.g. a
-/// 4xx or 5xx HTTP status code).
+/// action, normally with an error indication in the underlying protocol (e.g.
+/// a 4xx or 5xx HTTP status code).
 public class ErrorResponse : Response {
     /// A code giving the type of error which occurred.
     var error: ErrorType { get set }

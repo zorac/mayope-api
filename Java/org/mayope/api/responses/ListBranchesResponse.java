@@ -45,7 +45,7 @@ public class ListBranchesResponse {
      *
      * @return The value
      */
-    public List getBranches() {
+    public List<Branch> getBranches() {
         return branches;
     }
 
@@ -54,7 +54,7 @@ public class ListBranchesResponse {
      *
      * @param branches A new value
      */
-    public void setBranches(List branches) {
+    public void setBranches(List<Branch> branches) {
         this.branches = branches;
     }
 }

@@ -5,8 +5,11 @@
 /// Details of a branch in a Mayope schema.
 public class Branch : Node {
     /// The type of the branch's value.
-    var type: String { get set }
+    var type: BranchType { get set }
 
-    /// The child branches if the type involves a Tree.
-    var branches: Branch { get set }
+    /// Additional size specifiers for the type if needed.
+    var sizes: Array<Int> { get set }
+
+    /// The child branch type(s) if not a single-valued type.
+    var branches: Array<Branch> { get set }
 }

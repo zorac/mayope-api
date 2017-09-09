@@ -11,14 +11,14 @@ public abstract class SuccessResponse implements Response {
     /**
      * True if the operation succeeded, false otherwise.
      */
-    private boolean success;
+    private Boolean success;
 
     /**
      * Get true if the operation succeeded, false otherwise.
      *
      * @return The value
      */
-    public boolean getSuccess() {
+    public Boolean getSuccess() {
         return success;
     }
 
@@ -27,7 +27,7 @@ public abstract class SuccessResponse implements Response {
      *
      * @param success A new value
      */
-    public void setSuccess(boolean success) {
+    public void setSuccess(Boolean success) {
         this.success = success;
     }
 }

@@ -45,7 +45,7 @@ public class ListForestsResponse {
      *
      * @return The value
      */
-    public List getForests() {
+    public List<Forest> getForests() {
         return forests;
     }
 
@@ -54,7 +54,7 @@ public class ListForestsResponse {
      *
      * @param forests A new value
      */
-    public void setForests(List forests) {
+    public void setForests(List<Forest> forests) {
         this.forests = forests;
     }
 }

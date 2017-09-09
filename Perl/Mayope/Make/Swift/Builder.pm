@@ -11,6 +11,7 @@ sub new {
 
     $self->{raw_types} = {
         Boolean => [ 'Bool' ],
+        Integer => [ 'Int' ],
         String  => [ 'String' ],
         UUID    => [ 'UUID', 'Foundation' ],
         List    => [ 'Array' ],

@@ -13,8 +13,8 @@ namespace Mayope.Api.Responses
 {
     /// <summary>
     /// An error response. This may be returned as an alternative response to
-    /// any action, normally with an error indication in the underlying protocol
-    /// (e.g. a 4xx or 5xx HTTP status code).
+    /// any action, normally with an error indication in the underlying
+    /// protocol (e.g. a 4xx or 5xx HTTP status code).
     /// </summary>
     public class ErrorResponse : IResponse
     {

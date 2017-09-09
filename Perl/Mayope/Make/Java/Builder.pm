@@ -10,7 +10,8 @@ sub new {
     my $self = $this->SUPER::new($config, $api, $basedir, 'Java');
 
     $self->{raw_types} = {
-        Boolean => [ 'boolean' ],
+        Boolean => [ 'Boolean' ],
+        Integer => [ 'Integer' ],
         String  => [ 'String' ],
         UUID    => [ 'UUID', 'java.util' ],
         List    => [ 'List', 'java.util' ],

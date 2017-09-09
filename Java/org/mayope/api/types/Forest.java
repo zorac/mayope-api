@@ -28,7 +28,7 @@ public class Forest extends Node {
      *
      * @return The value
      */
-    public List getForests() {
+    public List<Forest> getForests() {
         return forests;
     }
 
@@ -38,7 +38,7 @@ public class Forest extends Node {
      *
      * @param forests A new value
      */
-    public void setForests(List forests) {
+    public void setForests(List<Forest> forests) {
         this.forests = forests;
     }
 
@@ -48,7 +48,7 @@ public class Forest extends Node {
      *
      * @return The value
      */
-    public List getTrees() {
+    public List<Tree> getTrees() {
         return trees;
     }
 
@@ -58,7 +58,7 @@ public class Forest extends Node {
      *
      * @param trees A new value
      */
-    public void setTrees(List trees) {
+    public void setTrees(List<Tree> trees) {
         this.trees = trees;
     }
 }

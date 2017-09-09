@@ -34,7 +34,9 @@ sub parse {
 
     while (defined(my $line = shift(@{$self->{lines}}))) {
         if ($line =~ /^
-                    TYPE \s+ (\w+) (?:
+                    (?:
+                        (CORE|RAW) \s+
+                    )? TYPE \s+ (\w+) (?:
                         \s* < \s* (
                             \w+ (?:
                                 \s* , \s* \w+
@@ -44,17 +46,21 @@ sub parse {
                         \s* : \s* (\w+)
                     )? \s*
                 $/x) {
-            my $id = $1;
-            my $generic = $2;
-            my $enum = ($3 && ($3 eq 'Enum')) ? 1 : 0;
-            my $parent = $3 ? $self->{type}{$3} : undef;
+            my $modifier = $1;
+            my $id = $2;
+            my $generic = $3;
+            my $super = $4;
+            my $enum = $super && ($super eq 'Enum');
+            my $parent = $super ? $self->{type}{$super} : undef;
             my $type = $enum ? Mayope::Make::Model::Enum->new
                              : Mayope::Make::Model::Type->new;
 
-            die("Unknown parent type $3 in\n$line\n")
-                if ($3 && !$parent && !$enum);
+            die("Unknown parent type $super in\n$line\n")
+                if ($super && !$parent && !$enum);
 
             $type->{id} = $id;
+            $type->{raw} = 1 if ($modifier && ($modifier eq 'RAW'));
+            $type->{core} = 1 if ($modifier && ($modifier eq 'CORE'));
             $type->{generic} = [ split(/\s*,\s*/, $generic) ] if ($generic);
             $type->{parent} = $parent if ($parent);
             $self->{type}{$id} = $type;
@@ -71,10 +77,12 @@ sub parse {
                     )? \s*
                 $/x) {
             my $id = $1;
-            my $parent = $2 ? $self->{message}{$2} : undef;
+            my $super = $2;
+            my $parent = $super ? $self->{message}{$super} : undef;
             my $message = Mayope::Make::Model::Message->new( id => $id );
 
-            die("Unknown parent message $2 in\n$line\n") if ($2 && !$parent);
+            die("Unknown parent message $super in\n$line\n")
+                if ($super && !$parent);
 
             $message->{parent} = $parent if ($parent);
             $message->{abstraction} = REQUIRE_CLASS->{$id} ? 0

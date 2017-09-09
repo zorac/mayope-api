@@ -41,9 +41,11 @@ sub build {
     my $raw_types = $self->{raw_types};
 
     foreach my $type ($self->types) {
-        my $raw = $raw_types->{$type->id};
+        if ($type->{raw}) {
+            my $raw = $raw_types->{$type->id};
 
-        if ($raw) {
+            die('Unknown raw type ' . $type->id) if (!$raw);
+
             $type->class($lang, $raw->[0]);
             $type->package($lang, $raw->[1]) if ($#{$raw});
         } else {

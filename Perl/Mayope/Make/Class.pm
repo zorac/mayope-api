@@ -97,6 +97,7 @@ sub add_field {
                     id => 'get' . ucfirst($field->id),
                     returns => Mayope::Make::Model::Param->new(
                         type => $field->type,
+                        generic => $field->{generic},
                         comment => 'The value'
                     ),
                     comment => 'Get ' . lcfirst($field->comment),
@@ -107,6 +108,7 @@ sub add_field {
                     params => { request => Mayope::Make::Model::Param->new(
                         id => $field->id,
                         type => $field->type,
+                        generic => $field->{generic},
                         comment => 'A new value'
                     ) },
                     comment => 'Set ' . lcfirst($field->comment),

@@ -10,8 +10,8 @@ using Newtonsoft.Json;
 namespace Mayope.Api.Responses
 {
     /// <summary>
-    /// A successful login response including the authentication token to use in
-    /// future authenticated requests.
+    /// A successful login response including the authentication token to use
+    /// in future authenticated requests.
     /// </summary>
     public class LoginResponse : IResponse
     {
