@@ -22,7 +22,7 @@ sub new {
     }
 
     if ($self->config('nsj')) {
-        $self->packages_for('enum', 'Newtonsoft.Json');
+        $self->packages_for('enum', 'Newtonsoft.Json', 'Newtonsoft.Json.Converters');
         $self->packages_for('required', 'Newtonsoft.Json');
     }
 

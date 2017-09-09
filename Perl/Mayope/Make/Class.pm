@@ -12,6 +12,7 @@ sub new {
     $self->{abstraction} = $type->abstraction || 0;
     $self->{package} = undef;
     $self->{package_separator} = '.';
+    $self->{has_subpaackages} = 1;
     $self->{includes} = { };
     $self->{include_groups} = [ ];
     $self->{includes_before_package} = 0;
@@ -63,10 +64,12 @@ sub subpackage {
         $self->{subdir} = $subpackage;
     }
 
-    if (defined($self->{package})) {
-        $self->{package} .= $self->{package_separator} . $subpackage;
-    } else {
-        $self->{package} = $subpackage;
+    if ($self->{has_subpaackages}) {
+        if (defined($self->{package})) {
+            $self->{package} .= $self->{package_separator} . $subpackage;
+        } else {
+            $self->{package} = $subpackage;
+        }
     }
 }
 
@@ -75,6 +78,7 @@ sub add_include {
     my $package = $self->{package} || '';
 
     foreach my $include (@includes) {
+        next if (!defined($include));
         next if ($include eq $package); # TODO superpackages
 
         $self->{includes}{$include} = 1;
@@ -85,6 +89,32 @@ sub add_field {
     my ($self, @fields) = @_;
 
     push(@{$self->{fields}}, @fields);
+
+    if ($self->{fields_have_methods}) {
+        foreach my $field (@fields) {
+            $self->add_method(
+                Mayope::Make::Model::Method->new(
+                    id => 'get' . ucfirst($field->id),
+                    returns => Mayope::Make::Model::Param->new(
+                        type => $field->type,
+                        comment => 'The value'
+                    ),
+                    comment => 'Get ' . lcfirst($field->comment),
+                    getter => $field
+                ),
+                Mayope::Make::Model::Method->new(
+                    id => 'set' . ucfirst($field->id),
+                    params => { request => Mayope::Make::Model::Param->new(
+                        id => $field->id,
+                        type => $field->type,
+                        comment => 'A new value'
+                    ) },
+                    comment => 'Set ' . lcfirst($field->comment),
+                    setter => $field
+                )
+            );
+        }
+    }
 }
 
 sub add_method {
@@ -108,10 +138,10 @@ sub build_file {
     my $includes_before_package = $self->{includes_before_package};
     my @values = @{$self->{values}};
     my @fields = @{$self->{fields}};
-    my $fields_have_methods = $self->{fields_have_methods};
     my @methods = @{$self->{methods}};
     my $index = 0;
 
+    $self->begin_file;
     $self->begin_package($package) if (!$includes_before_package);
 
     foreach my $group (@include_groups) {
@@ -138,18 +168,18 @@ sub build_file {
         $self->do_field($field, $index++);
     }
 
-    if ($fields_have_methods) {
-        foreach my $field (@fields) {
-            $self->do_field_methods($field, $index++);
-        }
-    }
-
     foreach my $method (@methods) {
         $self->do_method($method, $index++);
     }
 
     $self->end_class();
     $self->end_package();
+    $self->end_file;
+}
+
+sub begin_file {
+    my ($self) = @_;
+    # Implement in subclass
 }
 
 sub begin_package {
@@ -177,11 +207,6 @@ sub do_field {
     # Implement in subclass
 }
 
-sub do_field_methods {
-    my ($self, $field, $not_first) = @_;
-    # Implement in subclass
-}
-
 sub do_method {
     my ($self, $method, $not_first) = @_;
     # Implement in subclass
@@ -193,6 +218,11 @@ sub end_class {
 }
 
 sub end_package {
+    my ($self) = @_;
+    # Implement in subclass
+}
+
+sub end_file {
     my ($self) = @_;
     # Implement in subclass
 }

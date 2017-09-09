@@ -93,9 +93,13 @@ sub build {
             id => $action->id,
             params => { request => Mayope::Make::Model::Param->new(
                 id => 'request',
-                type => $action->request
+                type => $action->request,
+                comment => 'A request message'
             ) },
-            returns => $action->response,
+            returns => Mayope::Make::Model::Param->new(
+                type => $action->response,
+                comment => 'The response message'
+            ),
             comment => $action->comment
         ));
     }

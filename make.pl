@@ -20,6 +20,7 @@ my %langs = (
         scmda   => 1, # System.ComponentModel.DataAnnotations
     },
     Java => { },
+    Swift => { },
 );
 
 my $cwd = getcwd();

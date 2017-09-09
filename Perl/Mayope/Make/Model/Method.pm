@@ -15,4 +15,22 @@ sub returns {
     return $self->{returns};
 }
 
+sub has_body {
+    my ($self) = @_;
+
+    return $self->{getter} || $self->{setter};
+}
+
+sub getter {
+    my ($self) = @_;
+
+    return $self->{getter};
+}
+
+sub setter {
+    my ($self) = @_;
+
+    return $self->{setter};
+}
+
 1;
